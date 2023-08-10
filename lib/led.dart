@@ -32,6 +32,8 @@ void updateLed(Uint8List s) {
 }
 
 class Led extends StatefulWidget {
+  const Led({super.key});
+
   @override
   State<Led> createState() => _LedState();
 }
@@ -65,18 +67,20 @@ class _LedState extends State<Led> {
   List<String> teamNames = ["Team A", "Team B", "Welcome to NGPiTECH"];
   List<int> scoreValue = [0, 0];
   List<int> winningSet = [0, 0];
+  List<int> foul = [0, 0];
+  List<int> timeout = [1, 1];
   bool _showText = true;
   bool _showTextField = false;
   int changingTeam = 0;
   String textToShow = "Welcome to Dr N.G.P College's tournament.";
-  TextEditingController _textController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
 
   int _seconds = 0;
   bool _isRunning = false;
   late Timer _timer;
 
   void _startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _seconds += 1;
       });
@@ -135,12 +139,12 @@ class _LedState extends State<Led> {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.bluetooth),
+          child: const Icon(Icons.bluetooth),
           onPressed: () {
             Navigator.push(
               context,
               PageRouteBuilder(
-                  pageBuilder: (c, a1, a2) => Home(),
+                  pageBuilder: (c, a1, a2) => const Home(),
                   transitionsBuilder: (context, animation, secondaryAnimation,
                           child) =>
                       FadeTransition(
@@ -161,7 +165,8 @@ class _LedState extends State<Led> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 500), // Animation duration
+                duration:
+                    const Duration(milliseconds: 500), // Animation duration
                 child: _showTextField
                     ? InkWell(
                         onTap: () {
@@ -170,7 +175,7 @@ class _LedState extends State<Led> {
                           });
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.transparent,
@@ -185,13 +190,8 @@ class _LedState extends State<Led> {
                                 try {
                                   setState(() {
                                     updateLed(Uint8List.fromList(
-                                        convertStringToASCII((changingTeam == 1
-                                                ? "T"
-                                                : (changingTeam == 0
-                                                    ? "S"
-                                                    : "U")) +
-                                            _textController.text +
-                                            "")));
+                                        convertStringToASCII(
+                                            "${changingTeam == 1 ? "T" : (changingTeam == 0 ? "S" : "U")}${_textController.text}")));
                                     teamNames[changingTeam] = value;
                                     _textController.clear();
                                     _showTextField = false;
@@ -203,10 +203,10 @@ class _LedState extends State<Led> {
                                               "Failed : ${e.toString()}")));
                                 }
                               },
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 24),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 24),
                               textAlign: TextAlign.center,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 hintText: 'Enter text',
                                 hintStyle: TextStyle(color: Colors.grey),
                                 border: InputBorder.none,
@@ -221,9 +221,10 @@ class _LedState extends State<Led> {
                         children: [
                           Text(
                             textToShow,
-                            style: TextStyle(color: Colors.white, fontSize: 24),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 24),
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                         ],
                       ),
               ),
@@ -249,13 +250,13 @@ class _LedState extends State<Led> {
                 children: [
                   Text(
                     _formatTime(),
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 36,
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -270,7 +271,7 @@ class _LedState extends State<Led> {
                               content: Text("Failed : ${e.toString()}")));
                         }
                       }),
-                      SizedBox(
+                      const SizedBox(
                         width: 30,
                       ),
                       _buildIconButton(Icons.restart_alt_outlined, () {
@@ -280,7 +281,7 @@ class _LedState extends State<Led> {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text("Failed : ${e.toString()}")));
                         }
-                      })
+                      }),
                     ],
                   ),
                 ],
@@ -299,12 +300,23 @@ class _LedState extends State<Led> {
                         SnackBar(content: Text("Failed : ${e.toString()}")));
                   }
                 }),
-                SizedBox(
+                const SizedBox(
                   width: 30,
                 ),
                 _buildIconButton(Icons.reset_tv, () {
                   try {
                     connection!.output.add(Uint8List.fromList([(99)]));
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Failed : ${e.toString()}")));
+                  }
+                }),
+                const SizedBox(
+                  width: 30,
+                ),
+                _buildIconButton(Icons.score, () {
+                  try {
+                    connection!.output.add(Uint8List.fromList([(117)]));
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("Failed : ${e.toString()}")));
@@ -330,7 +342,7 @@ class _LedState extends State<Led> {
                 },
                 child: Text(
                   teamNames[2],
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.green,
                     fontSize: 28,
                     fontFamily: 'Roboto',
@@ -365,7 +377,7 @@ class _LedState extends State<Led> {
           },
           child: Text(
             teamNames[i],
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.green,
               fontSize: 28,
               fontFamily: 'Roboto',
@@ -373,13 +385,13 @@ class _LedState extends State<Led> {
             ),
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
+              const Text(
                 "Score",
                 style: TextStyle(
                   color: Colors.white, // Set the color to white for contrast
@@ -422,44 +434,136 @@ class _LedState extends State<Led> {
           color: Colors
               .grey[700], // You can adjust the color here to your preference
         ),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          SizedBox(
-            height: 65,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: StepperTouch(
-                initialValue: 0,
-                withSpring: true,
-                onChanged: (int? value) {
-                  try {
-                    int plusOrMinus = winningSet[i] - (value ?? 0);
+        if (global.winSet)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 65,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: StepperTouch(
+                    initialValue: 0,
+                    withSpring: true,
+                    onChanged: (int? value) {
+                      try {
+                        int plusOrMinus = winningSet[i] - (value ?? 0);
 
-                    bool isMinus = plusOrMinus == 1;
-                    connection!.output.add(
-                        Uint8List.fromList([(isMinus ? 70 : 69) + (i * 2)]));
-                    winningSet[i] = winningSet[i] + (isMinus == true ? -1 : 1);
+                        bool isMinus = plusOrMinus == 1;
+                        connection!.output.add(Uint8List.fromList(
+                            [(isMinus ? 70 : 69) + (i * 2)]));
+                        winningSet[i] =
+                            winningSet[i] + (isMinus == true ? -1 : 1);
 
-                    setState(() {});
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Failed : ${e.toString()}")));
-                  }
-                },
+                        setState(() {});
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Failed : ${e.toString()}")));
+                      }
+                    },
+                  ),
+                ),
               ),
-            ),
+              const Padding(
+                padding: EdgeInsets.all(18.0),
+                child: Text(
+                  "Winning Set",
+                  style: TextStyle(
+                    color:
+                        Colors.redAccent, // Set the color to white for contrast
+                    fontSize: 28,
+                    fontFamily: 'Helvetica Neue', // Use Helvetica Neue or Arial
+                  ),
+                ),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: Text(
-              "Winning Set",
-              style: TextStyle(
-                color: Colors.redAccent, // Set the color to white for contrast
-                fontSize: 28,
-                fontFamily: 'Helvetica Neue', // Use Helvetica Neue or Arial
+        if (global.foul)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 65,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: StepperTouch(
+                    initialValue: 0,
+                    withSpring: true,
+                    onChanged: (int? value) {
+                      try {
+                        int plusOrMinus = foul[i] - (value ?? 0);
+
+                        bool isMinus = plusOrMinus == 1;
+                        connection!.output.add(Uint8List.fromList(
+                            [(isMinus ? 102 : 104) + (i * 2)]));
+                        foul[i] = foul[i] + (isMinus == true ? -1 : 1);
+
+                        setState(() {});
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Failed : ${e.toString()}")));
+                      }
+                    },
+                  ),
+                ),
               ),
-            ),
-          )
-        ]),
+              const Padding(
+                padding: EdgeInsets.all(18.0),
+                child: Text(
+                  "Foul",
+                  style: TextStyle(
+                    color:
+                        Colors.redAccent, // Set the color to white for contrast
+                    fontSize: 28,
+                    fontFamily: 'Helvetica Neue', // Use Helvetica Neue or Arial
+                  ),
+                ),
+              ),
+            ],
+          ),
+        if (global.foul)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(18.0),
+                child: Text(
+                  "Timeout",
+                  style: TextStyle(
+                    color:
+                        Colors.redAccent, // Set the color to white for contrast
+                    fontSize: 28,
+                    fontFamily: 'Helvetica Neue', // Use Helvetica Neue or Arial
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 65,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: StepperTouch(
+                    initialValue: 1,
+                    withSpring: true,
+                    onChanged: (int? value) {
+                      try {
+                        int plusOrMinus = timeout[i] - (value ?? 0);
+
+                        bool isMinus = plusOrMinus == 1;
+                        connection!.output.add(Uint8List.fromList(
+                            [(isMinus ? 49 : 51) + (i * 2)]));
+                        timeout[i] = timeout[i] + (isMinus == true ? -1 : 1);
+
+                        setState(() {});
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Failed : ${e.toString()}")));
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
       ],
     );
   }
@@ -468,9 +572,9 @@ class _LedState extends State<Led> {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        primary: Colors.white,
-        shape: CircleBorder(),
-        padding: EdgeInsets.all(16),
+        backgroundColor: Colors.white,
+        shape: const CircleBorder(),
+        padding: const EdgeInsets.all(16),
         elevation: 4,
       ),
       child: Icon(icon, size: 25, color: Colors.green),

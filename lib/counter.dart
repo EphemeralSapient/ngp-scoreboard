@@ -44,10 +44,12 @@ class _Stepper2State extends State<StepperTouch>
     _controller.addListener(() {});
 
     if (widget.direction == Axis.horizontal) {
-      _animation = Tween<Offset>(begin: Offset(0.0, 0.0), end: Offset(1.5, 0.0))
+      _animation = Tween<Offset>(
+              begin: const Offset(0.0, 0.0), end: const Offset(1.5, 0.0))
           .animate(_controller);
     } else {
-      _animation = Tween<Offset>(begin: Offset(0.0, 0.0), end: Offset(0.0, 1.5))
+      _animation = Tween<Offset>(
+              begin: const Offset(0.0, 0.0), end: const Offset(0.0, 1.5))
           .animate(_controller);
     }
   }
@@ -62,10 +64,12 @@ class _Stepper2State extends State<StepperTouch>
   void didUpdateWidget(StepperTouch oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.direction == Axis.horizontal) {
-      _animation = Tween<Offset>(begin: Offset(0.0, 0.0), end: Offset(1.5, 0.0))
+      _animation = Tween<Offset>(
+              begin: const Offset(0.0, 0.0), end: const Offset(1.5, 0.0))
           .animate(_controller);
     } else {
-      _animation = Tween<Offset>(begin: Offset(0.0, 0.0), end: Offset(0.0, 1.5))
+      _animation = Tween<Offset>(
+              begin: const Offset(0.0, 0.0), end: const Offset(0.0, 1.5))
           .animate(_controller);
     }
   }
@@ -75,7 +79,7 @@ class _Stepper2State extends State<StepperTouch>
   @override
   Widget build(BuildContext context) {
     return FittedBox(
-      child: Container(
+      child: SizedBox(
         width: widget.direction == Axis.horizontal ? 280.0 : 120.0,
         height: widget.direction == Axis.horizontal ? 120.0 : 280.0,
         child: Material(
@@ -89,12 +93,13 @@ class _Stepper2State extends State<StepperTouch>
               Positioned(
                 left: widget.direction == Axis.horizontal ? 10.0 : null,
                 bottom: widget.direction == Axis.horizontal ? null : 10.0,
-                child: Icon(Icons.remove, size: 40.0, color: Colors.white),
+                child:
+                    const Icon(Icons.remove, size: 40.0, color: Colors.white),
               ),
               Positioned(
                 right: widget.direction == Axis.horizontal ? 10.0 : null,
                 top: widget.direction == Axis.horizontal ? null : 10.0,
-                child: Icon(Icons.add, size: 40.0, color: Colors.white),
+                child: const Icon(Icons.add, size: 40.0, color: Colors.white),
               ),
               GestureDetector(
                 onHorizontalDragStart: _onPanStart,
@@ -112,12 +117,12 @@ class _Stepper2State extends State<StepperTouch>
                         transitionBuilder:
                             (Widget child, Animation<double> animation) {
                           return ScaleTransition(
-                              child: child, scale: animation);
+                              scale: animation, child: child);
                         },
                         child: Text(
                           '$_value',
                           key: ValueKey<int>(_value),
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Color(0xFF6D72FF), fontSize: 56.0),
                         ),
                       ),
@@ -165,7 +170,7 @@ class _Stepper2State extends State<StepperTouch>
       changed = true;
     }
     if (widget.withSpring) {
-      final SpringDescription _kDefaultSpring =
+      final SpringDescription kDefaultSpring =
           SpringDescription.withDampingRatio(
         mass: 0.9,
         stiffness: 100.0,
@@ -173,14 +178,14 @@ class _Stepper2State extends State<StepperTouch>
       );
       if (widget.direction == Axis.horizontal) {
         _controller.animateWith(
-            SpringSimulation(_kDefaultSpring, _startAnimationPosX, 0.0, 0.0));
+            SpringSimulation(kDefaultSpring, _startAnimationPosX, 0.0, 0.0));
       } else {
         _controller.animateWith(
-            SpringSimulation(_kDefaultSpring, _startAnimationPosY, 0.0, 0.0));
+            SpringSimulation(kDefaultSpring, _startAnimationPosY, 0.0, 0.0));
       }
     } else {
       _controller.animateTo(0.0,
-          curve: Curves.bounceOut, duration: Duration(milliseconds: 500));
+          curve: Curves.bounceOut, duration: const Duration(milliseconds: 500));
     }
 
     if (changed && widget.onChanged != null) {

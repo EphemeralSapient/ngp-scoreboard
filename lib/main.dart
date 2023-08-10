@@ -1,18 +1,17 @@
 import 'dart:async';
-import 'dart:typed_data';
-import 'package:control_app/led.dart';
+
 import 'package:control_app/login.dart';
 import 'package:control_app/options.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 bool askedOnce = false;
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   // Function to define the fade-in and zoom-in animation for the route transition
   PageRouteBuilder _fadeZoomTransition(Widget page) {
     return PageRouteBuilder(
@@ -21,7 +20,7 @@ class MyApp extends StatelessWidget {
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = 0.0;
         const end = 1.0;
-        final curve =
+        const curve =
             Curves.ease; // You can choose a different easing curve if needed
 
         // Fade animation
@@ -48,10 +47,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData.light(useMaterial3: true),
       initialRoute: "/splash",
       routes: {
-        "/splash": (context) => MyHomePage(),
-        "/login": (context) => LoginPage(),
+        "/splash": (context) => const MyHomePage(),
+        "/login": (context) => const LoginPage(),
         "/options": (context) => Options(),
       },
     );
@@ -59,6 +59,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -68,11 +70,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     Timer(
-        Duration(seconds: 2),
+        const Duration(seconds: 2),
         () => Navigator.pushReplacement(
             context,
             PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => LoginPage(),
+                pageBuilder: (c, a1, a2) => const LoginPage(),
                 transitionsBuilder: (context, animation, secondaryAnimation,
                         child) =>
                     FadeTransition(

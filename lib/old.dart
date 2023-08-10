@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 import 'global.dart' as globals;
 
 bool askedOnce = false;
@@ -75,7 +76,7 @@ class _FindDevicesScreenState extends State<FindDevicesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Connect the bluetooth device"),
+        title: const Text("Connect the bluetooth device"),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -128,11 +129,11 @@ class _BluetoothConnectionOptionState extends State<BluetoothConnectionOption> {
 
   Widget _buildBluetoothIcon() {
     if (connected && connecting == false) {
-      return Icon(Icons.bluetooth_connected);
+      return const Icon(Icons.bluetooth_connected);
     } else if (connecting == true) {
-      return Icon(Icons.bluetooth_searching);
+      return const Icon(Icons.bluetooth_searching);
     } else {
-      return Icon(Icons.bluetooth_disabled);
+      return const Icon(Icons.bluetooth_disabled);
     }
   }
 
@@ -144,6 +145,10 @@ class _BluetoothConnectionOptionState extends State<BluetoothConnectionOption> {
 
         connected = true;
       });
+      connection!.output
+          .add(Uint8List.fromList([107 + (globals.winSet ? 1 : 0)]));
+      connection!.output
+          .add(Uint8List.fromList([109 + (globals.foul ? 1 : 0)]));
 
       // Send "A" in ASCII bytes (65 is the ASCII code for "A")
       // connection!.output.add(Uint8List.fromList([65]));
@@ -155,7 +160,7 @@ class _BluetoothConnectionOptionState extends State<BluetoothConnectionOption> {
         try {
           globals.callback(event);
         } catch (e) {
-          debugPrint("CALLBACK FAILED : " + e.toString());
+          debugPrint("CALLBACK FAILED : $e");
         }
       });
       // When done, close the connection
@@ -207,15 +212,15 @@ class BluetoothOffScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.bluetooth_disabled,
               size: 100,
               color: Colors.grey,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               'Bluetooth is ${state != null ? state.toString().substring(15) : 'not available'}.',
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             ),
           ],
         ),
@@ -248,6 +253,8 @@ List<BluetoothDeviceUI> devices = [
 ];
 
 class ScoreboardScreen extends StatefulWidget {
+  const ScoreboardScreen({super.key});
+
   @override
   _ScoreboardScreenState createState() => _ScoreboardScreenState();
 }
@@ -298,7 +305,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
         scaffoldBackgroundColor: Colors.grey[100],
       ),
       home: Scaffold(
-        appBar: AppBar(title: Text('Scoreboard'), actions: [
+        appBar: AppBar(title: const Text('Scoreboard'), actions: [
           PopupMenuButton<Brightness>(
             onSelected: (brightness) {
               setState(() {
@@ -319,8 +326,8 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
         ]),
         body: ListView(
           children: [
-            if (connection == null) SizedBox(height: 130, child: Home()),
-            Divider(),
+            if (connection == null) const SizedBox(height: 130, child: Home()),
+            const Divider(),
             ...devices
                 .map((device) => BluetoothDeviceContainer(device: device))
                 .toList(),
@@ -352,7 +359,7 @@ class BluetoothUIElement {
 class BluetoothDeviceContainer extends StatefulWidget {
   final BluetoothDeviceUI device;
 
-  BluetoothDeviceContainer({required this.device});
+  BluetoothDeviceContainer({super.key, required this.device});
 
   @override
   _BluetoothDeviceContainerState createState() =>
@@ -409,7 +416,7 @@ class _BluetoothDeviceContainerState extends State<BluetoothDeviceContainer>
                 .toList(),
           ),
         ),
-        Divider(),
+        const Divider(),
       ],
     );
   }
@@ -423,7 +430,7 @@ class _BluetoothDeviceContainerState extends State<BluetoothDeviceContainer>
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                icon: Icon(Icons.remove),
+                icon: const Icon(Icons.remove),
                 onPressed: () {
                   setState(() {
                     element.value -= 1;
@@ -432,7 +439,7 @@ class _BluetoothDeviceContainerState extends State<BluetoothDeviceContainer>
               ),
               // Text('${element.value}'),
               IconButton(
-                icon: Icon(Icons.add),
+                icon: const Icon(Icons.add),
                 onPressed: () {
                   setState(() {
                     element.value += 1;
@@ -469,7 +476,7 @@ class _BluetoothDeviceContainerState extends State<BluetoothDeviceContainer>
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                icon: Icon(Icons.remove),
+                icon: const Icon(Icons.remove),
                 onPressed: () {
                   setState(() {
                     element.value -= 1;
@@ -478,7 +485,7 @@ class _BluetoothDeviceContainerState extends State<BluetoothDeviceContainer>
               ),
               // Text('${element.value}'),
               IconButton(
-                icon: Icon(Icons.add),
+                icon: const Icon(Icons.add),
                 onPressed: () {
                   setState(() {
                     element.value += 1;
@@ -486,13 +493,13 @@ class _BluetoothDeviceContainerState extends State<BluetoothDeviceContainer>
                 },
               ),
               IconButton(
-                icon: Icon(Icons.play_arrow),
+                icon: const Icon(Icons.play_arrow),
                 onPressed: () {
                   // Start timer logic
                 },
               ),
               IconButton(
-                icon: Icon(Icons.stop),
+                icon: const Icon(Icons.stop),
                 onPressed: () {
                   // Stop timer logic
                 },
@@ -507,7 +514,7 @@ class _BluetoothDeviceContainerState extends State<BluetoothDeviceContainer>
 class EditStringDialog extends StatefulWidget {
   final String value;
 
-  const EditStringDialog({required this.value});
+  const EditStringDialog({super.key, required this.value});
 
   @override
   _EditStringDialogState createState() => _EditStringDialogState();
@@ -531,7 +538,7 @@ class _EditStringDialogState extends State<EditStringDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Edit String'),
+      title: const Text('Edit String'),
       content: TextFormField(
         controller: _textEditingController,
         autofocus: true,
@@ -543,20 +550,20 @@ class _EditStringDialogState extends State<EditStringDialog> {
             borderSide: BorderSide.none,
           ),
         ),
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 16.0,
           color: Colors.black87,
         ),
       ),
       actions: [
         TextButton.icon(
-          icon: Icon(Icons.cancel),
-          label: Text('Cancel'),
+          icon: const Icon(Icons.cancel),
+          label: const Text('Cancel'),
           onPressed: () => Navigator.pop(context),
         ),
         TextButton.icon(
-          icon: Icon(Icons.save),
-          label: Text('Save'),
+          icon: const Icon(Icons.save),
+          label: const Text('Save'),
           onPressed: () {
             final newValue = _textEditingController.text;
             Navigator.pop(context, newValue);
@@ -568,6 +575,8 @@ class _EditStringDialogState extends State<EditStringDialog> {
 }
 
 class BluetoothScreen extends StatefulWidget {
+  const BluetoothScreen({super.key});
+
   @override
   _BluetoothScreenState createState() => _BluetoothScreenState();
 }
@@ -636,13 +645,13 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('HC-05 Communication'),
+        title: const Text('HC-05 Communication'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
             child: Text(
               'Available Devices:',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -669,7 +678,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: connectToDevice,
-              child: Text('Connect'),
+              child: const Text('Connect'),
             ),
           ),
           Padding(
@@ -678,7 +687,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
               onPressed: () {
                 sendData('Hello, HC-05!');
               },
-              child: Text('Send Data'),
+              child: const Text('Send Data'),
             ),
           ),
         ],

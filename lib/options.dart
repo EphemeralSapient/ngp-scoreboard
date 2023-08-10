@@ -1,6 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:control_app/led.dart';
-import 'package:control_app/main.dart';
 import 'package:flutter/material.dart';
+
+import 'global.dart' as global;
+
+String previousChosen = "";
 
 class Options extends StatelessWidget {
   final List<String> eventNames = [
@@ -25,10 +30,12 @@ class Options extends StatelessWidget {
     "assets/kho.jpg"
   ];
 
+  Options({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Choose the sports event")),
+      appBar: AppBar(title: const Text("Choose the sports event")),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -42,7 +49,7 @@ class Options extends StatelessWidget {
                   imagePath: imagePaths[index],
                 ),
               ),
-            SizedBox(
+            const SizedBox(
               height: 150,
             )
           ],
@@ -56,14 +63,14 @@ class SportsEventButton extends StatelessWidget {
   final String eventName;
   final String imagePath;
 
-  SportsEventButton({required this.eventName, required this.imagePath});
+  SportsEventButton(
+      {super.key, required this.eventName, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        foregroundColor:
-            Colors.transparent, // You can change the button color here
+        foregroundColor: Colors.transparent,
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
         shape: RoundedRectangleBorder(
@@ -71,10 +78,29 @@ class SportsEventButton extends StatelessWidget {
         ),
       ),
       onPressed: () {
+        if (eventName == "Volleyball") {
+          global.winSet = true;
+          global.foul = false;
+        } else if (eventName == "Basketball") {
+          global.winSet = false;
+          global.foul = true;
+        } else {
+          global.winSet = false;
+          global.foul = false;
+        }
+        try {
+          if (global.winSet) {
+            global.connection!.output.add(Uint8List.fromList([108]));
+          } else if (global.foul) {
+            global.connection!.output.add(Uint8List.fromList([109]));
+          } else {
+            global.connection!.output.add(Uint8List.fromList([112]));
+          }
+        } catch (e) {}
         Navigator.push(
           context,
           PageRouteBuilder(
-              pageBuilder: (c, a1, a2) => Led(),
+              pageBuilder: (c, a1, a2) => const Led(),
               transitionsBuilder: (context, animation, secondaryAnimation,
                       child) =>
                   FadeTransition(
@@ -106,8 +132,8 @@ class SportsEventButton extends StatelessWidget {
             child: Center(
               child: Text(
                 eventName,
-                style: TextStyle(
-                    color: Colors.white, // You can change the text color here
+                style: const TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                     letterSpacing: 1.25),

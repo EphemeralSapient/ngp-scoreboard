@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:ui';
+
 import 'package:control_app/options.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -32,12 +35,13 @@ class _LoginPageState extends State<LoginPage> {
 
   void startSlideshowTimer() {
     // Start the timer to change the background image every 5 seconds
-    Timer.periodic(Duration(seconds: 5), (timer) {
+    Timer.periodic(const Duration(seconds: 5), (timer) {
       setState(() {
         currentPageIndex = (currentPageIndex + 1) % slideshowImages.length;
 
         pageController.animateToPage(currentPageIndex,
-            duration: Duration(milliseconds: 1300), curve: Curves.easeOutExpo);
+            duration: const Duration(milliseconds: 1300),
+            curve: Curves.easeOutExpo);
       });
     });
   }
@@ -77,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(16.0),
               child: Container(
                 width: 300,
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(8),
@@ -86,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.black.withOpacity(0.3),
                       spreadRadius: 3,
                       blurRadius: 5,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
@@ -97,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       // Image.asset('assets/logo.png', width: 100, height: 100),
-                      Text(
+                      const Text(
                         'Sports Community',
                         style: TextStyle(
                           fontSize: 27,
@@ -106,14 +110,14 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextFormField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Username',
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.person_outline),
                         ),
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your username';
@@ -124,14 +128,14 @@ class _LoginPageState extends State<LoginPage> {
                           setState(() => _username = value.trim());
                         },
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextFormField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Password',
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.lock_outline),
                         ),
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -143,11 +147,11 @@ class _LoginPageState extends State<LoginPage> {
                           setState(() => _password = value.trim());
                         },
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           shadowColor: Colors.transparent,
-                          primary: Colors.blueAccent,
+                          backgroundColor: Colors.blueAccent,
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
@@ -175,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                             );
                           }
                         },
-                        child: Text(
+                        child: const Text(
                           'Login',
                           style: TextStyle(color: Colors.white),
                         ),
@@ -194,10 +198,10 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(slideshowImages.length, (index) {
                 return AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   width: 10,
                   height: 10,
-                  margin: EdgeInsets.symmetric(horizontal: 4),
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
                 );
               }),
             ),
