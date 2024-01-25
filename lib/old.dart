@@ -156,6 +156,7 @@ class _BluetoothConnectionOptionState extends State<BluetoothConnectionOption> {
       // To send a string, you can use the following:
       // String message = "A";
       // connection.output.add(Uint8List.fromList(message.codeUnits));
+      globals.isConnected = true;
       connection!.input!.listen((event) {
         try {
           globals.callback(event);
@@ -293,7 +294,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
         primarySwatch: Colors.deepPurple,
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
+          // foregroundColor: Colors.black,
           elevation: 0,
           titleTextStyle: TextStyle(
             color: Colors.black,

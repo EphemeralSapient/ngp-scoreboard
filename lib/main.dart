@@ -1,11 +1,16 @@
 import 'dart:async';
+import 'dart:isolate';
 
 import 'package:control_app/login.dart';
 import 'package:control_app/options.dart';
 import 'package:flutter/material.dart';
 
+import 'global.dart' as global;
+
 bool askedOnce = false;
 void main() {
+  ReceivePort receivePort = ReceivePort();
+  Isolate.spawn(global.loopCheck, receivePort.sendPort);
   runApp(const MyApp());
 }
 

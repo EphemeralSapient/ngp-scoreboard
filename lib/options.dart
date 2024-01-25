@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:control_app/led.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 import 'global.dart' as global;
 
@@ -40,19 +41,28 @@ class Options extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            for (int index = 0; index < eventNames.length; index++)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SportsEventButton(
-                  eventName: eventNames[index],
-                  imagePath: imagePaths[index],
-                ),
+          children: AnimationConfiguration.toStaggeredList(
+            duration: const Duration(milliseconds: 600),
+            childAnimationBuilder: (widget) => SlideAnimation(
+              verticalOffset: 150.0,
+              child: FadeInAnimation(
+                child: widget,
               ),
-            const SizedBox(
-              height: 150,
-            )
-          ],
+            ),
+            children: [
+              for (int index = 0; index < eventNames.length; index++)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SportsEventButton(
+                    eventName: eventNames[index],
+                    imagePath: imagePaths[index],
+                  ),
+                ),
+              const SizedBox(
+                height: 150,
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -78,6 +88,7 @@ class SportsEventButton extends StatelessWidget {
         ),
       ),
       onPressed: () {
+        global.bg = imagePath;
         if (eventName == "Volleyball") {
           global.winSet = true;
           global.foul = false;
